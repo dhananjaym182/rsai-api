@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Provider, ProviderConfig, ModelInfo } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useProvidersStore } from '@/store/providers-store'
 import { ProviderStatusBadge } from './ProviderStatusBadge'
 import { ApiKeyInput } from './ApiKeyInput'
@@ -11,8 +13,9 @@ import { BaseUrlInput } from './BaseUrlInput'
 import { ModelFetcher } from './ModelFetcher'
 import { ModelCheckboxList } from './ModelCheckboxList'
 import { ProviderTestPanel } from './ProviderTestPanel'
-import { encryptKey } from '@/lib/encryption'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { encryptKey, decryptKey } from '@/lib/encryption'
+import { ChevronDown, ChevronUp, Plus, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface ProviderCardProps {
   provider: Provider
@@ -24,12 +27,54 @@ export function ProviderCard({ provider }: ProviderCardProps) {
   const [baseUrl, setBaseUrl] = useState(provider.baseUrl)
   const [fetchedModels, setFetchedModels] = useState<ModelInfo[]>([])
   const [selectedModels, setSelectedModels] = useState<string[]>([])
+  const [manualModelInput, setManualModelInput] = useState('')
+  const [manualModels, setManualModels] = useState<string[]>([])
 
   const config = useProvidersStore((state) => state.getProvider(provider.id))
   const saveProvider = useProvidersStore((state) => state.saveProvider)
   const resetProvider = useProvidersStore((state) => state.resetProvider)
 
+  // Load existing config when component mounts or config changes
+  useEffect(() => {
+    if (config) {
+      setBaseUrl(config.baseUrl)
+      setSelectedModels(config.enabledModels)
+      if (config.apiKey) {
+        const decrypted = decryptKey(config.apiKey)
+        setApiKey(decrypted)
+      }
+    }
+  }, [config])
+
+  const handleAddManualModel = () => {
+    if (!manualModelInput.trim()) {
+      toast.error('Please enter a model name')
+      return
+    }
+    
+    const modelId = manualModelInput.trim()
+    if (selectedModels.includes(modelId) || manualModels.includes(modelId)) {
+      toast.error('Model already added')
+      return
+    }
+
+    setManualModels([...manualModels, modelId])
+    setSelectedModels([...selectedModels, modelId])
+    setManualModelInput('')
+    toast.success(`Added model: ${modelId}`)
+  }
+
+  const handleRemoveManualModel = (modelId: string) => {
+    setManualModels(manualModels.filter(m => m !== modelId))
+    setSelectedModels(selectedModels.filter(m => m !== modelId))
+  }
+
   const handleSave = () => {
+    if (selectedModels.length === 0) {
+      toast.error('Please select or add at least one model')
+      return
+    }
+
     const newConfig: ProviderConfig = {
       providerId: provider.id,
       apiKey: encryptKey(apiKey),
@@ -39,6 +84,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
       status: 'NOT_CONFIGURED',
     }
     saveProvider(newConfig)
+    toast.success(`${provider.name} configuration saved`)
   }
 
   const handleReset = () => {
@@ -47,6 +93,8 @@ export function ProviderCard({ provider }: ProviderCardProps) {
     setBaseUrl(provider.baseUrl)
     setFetchedModels([])
     setSelectedModels([])
+    setManualModels([])
+    toast.info(`${provider.name} configuration reset`)
   }
 
   return (
@@ -92,7 +140,8 @@ export function ProviderCard({ provider }: ProviderCardProps) {
             requiresKey={provider.requiresKey}
             onModelsFetched={(models) => {
               setFetchedModels(models)
-              setSelectedModels(models.map((m) => m.id))
+              const modelIds = models.map((m) => m.id)
+              setSelectedModels([...new Set([...selectedModels, ...modelIds])])
             }}
           />
 
@@ -103,6 +152,44 @@ export function ProviderCard({ provider }: ProviderCardProps) {
               onSelectionChange={setSelectedModels}
             />
           )}
+
+          {/* Manual Model Input */}
+          <div className="space-y-2 border-t pt-4">
+            <Label>Add Model Manually</Label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="e.g., gpt-4, claude-3-opus-20240229"
+                value={manualModelInput}
+                onChange={(e) => setManualModelInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleAddManualModel()
+                  }
+                }}
+              />
+              <Button onClick={handleAddManualModel} size="sm">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {manualModels.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">Manually added models:</p>
+                {manualModels.map((modelId) => (
+                  <div key={modelId} className="flex items-center justify-between bg-muted p-2 rounded">
+                    <span className="text-sm">{modelId}</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveManualModel(modelId)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {selectedModels.length > 0 && (
             <ProviderTestPanel
@@ -125,6 +212,12 @@ export function ProviderCard({ provider }: ProviderCardProps) {
               Reset
             </Button>
           </div>
+
+          {config && (
+            <div className="text-xs text-muted-foreground">
+              {config.enabledModels.length} model(s) configured
+            </div>
+          )}
         </CardContent>
       )}
     </Card>

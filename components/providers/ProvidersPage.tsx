@@ -5,9 +5,11 @@ import { providers } from '@/config/providers'
 import { ProviderCard } from './ProviderCard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { useProvidersStore } from '@/store/providers-store'
 import { autoDetectLocalProviders } from '@/lib/auto-detect'
 import { toast } from 'sonner'
+import { Search, Zap, CheckCircle2 } from 'lucide-react'
 
 export function ProvidersPage() {
   const [search, setSearch] = useState('')
@@ -42,25 +44,36 @@ export function ProvidersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Providers</h1>
-          <p className="text-muted-foreground mt-1">
-            Connected: {connectedCount}/{providers.length}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight">AI Providers</h1>
+          <p className="text-muted-foreground">
+            Configure your API keys and connect to AI providers
           </p>
         </div>
-        <Button onClick={handleAutoDetect} disabled={detecting}>
-          {detecting ? 'Detecting...' : 'Auto-detect Local'}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="gap-2">
+            <CheckCircle2 className="h-3 w-3" />
+            {connectedCount}/{providers.length} Connected
+          </Badge>
+          <Button onClick={handleAutoDetect} disabled={detecting} variant="outline">
+            <Zap className="mr-2 h-4 w-4" />
+            {detecting ? 'Detecting...' : 'Auto-detect Local'}
+          </Button>
+        </div>
       </div>
 
-      <Input
-        placeholder="Search providers..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Search providers..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {filteredProviders.map((provider) => (
           <ProviderCard key={provider.id} provider={provider} />
         ))}
