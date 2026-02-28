@@ -6,10 +6,11 @@ import { ProviderCard } from './ProviderCard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useProvidersStore } from '@/store/providers-store'
 import { autoDetectLocalProviders } from '@/lib/auto-detect'
 import { toast } from 'sonner'
-import { Search, Zap, CheckCircle2 } from 'lucide-react'
+import { Search, Zap, CheckCircle2, ShieldCheck, Lock } from 'lucide-react'
 
 export function ProvidersPage() {
   const [search, setSearch] = useState('')
@@ -62,6 +63,18 @@ export function ProvidersPage() {
           </Button>
         </div>
       </div>
+
+      <Alert className="border-primary/20 bg-primary/5">
+        <ShieldCheck className="h-4 w-4 text-primary" />
+        <AlertDescription className="text-sm leading-relaxed">
+          <div className="flex items-start gap-2">
+            <Lock className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
+            <div>
+              <strong className="font-semibold">Privacy & Security:</strong> All API keys and credentials are encrypted and stored locally on your machine using AES encryption. Your data never leaves your device and is not shared with any third-party services. We do not have access to your API keys or conversation history.
+            </div>
+          </div>
+        </AlertDescription>
+      </Alert>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
