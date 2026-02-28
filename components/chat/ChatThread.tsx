@@ -50,18 +50,22 @@ export function ChatThread() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="border-b p-4">
+      <div className="border-b px-4 py-3 bg-background">
         <ModelSelector />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activeSession.messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {activeSession.messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+        </div>
       </div>
 
-      <div className="border-t p-4">
-        <ChatComposer />
+      <div className="border-t px-4 py-4 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <ChatComposer />
+        </div>
       </div>
     </div>
   )

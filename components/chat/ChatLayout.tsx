@@ -9,9 +9,9 @@ interface ChatLayoutProps {
 
 export function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <div className="grid grid-cols-[280px_1fr] h-full">
+    <div className="grid grid-cols-[280px_1fr] h-full bg-background">
       <ChatSidebar />
-      <main className="overflow-hidden border-l">{children}</main>
+      <main className="overflow-hidden">{children}</main>
     </div>
   )
 }

@@ -19,18 +19,18 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
   return (
     <div className={`flex gap-4 group ${isUser ? 'flex-row-reverse' : ''}`}>
-      <Avatar className="h-8 w-8 border">
-        <AvatarFallback className={isUser ? 'bg-primary text-primary-foreground' : 'bg-muted'}>
+      <Avatar className="h-8 w-8 border border-border">
+        <AvatarFallback className={isUser ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}>
           {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
         </AvatarFallback>
       </Avatar>
 
       <div className={`flex-1 space-y-2 ${isUser ? 'flex flex-col items-end' : ''}`}>
-        <Card className={`max-w-[85%] p-4 ${isUser ? 'bg-primary text-primary-foreground' : ''}`}>
+        <Card className={`max-w-[85%] px-4 py-3 ${isUser ? 'bg-primary text-primary-foreground' : 'bg-card border-border'}`}>
           {isUser ? (
-            <p className="whitespace-pre-wrap">{message.content}</p>
+            <p className="whitespace-pre-wrap text-sm">{message.content}</p>
           ) : (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
+            <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}

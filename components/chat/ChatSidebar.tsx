@@ -69,9 +69,9 @@ export function ChatSidebar() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-muted/10">
-      <div className="p-4 space-y-4">
-        <Button onClick={() => createSession()} className="w-full" size="lg">
+    <div className="flex flex-col h-full bg-background border-r border-border">
+      <div className="p-4 space-y-3">
+        <Button onClick={() => createSession()} className="w-full">
           <Plus className="mr-2 h-4 w-4" />
           New Chat
         </Button>
@@ -82,12 +82,12 @@ export function ChatSidebar() {
             placeholder="Search chats..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-9 bg-secondary border-border"
           />
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-border" />
 
       <ScrollArea className="flex-1 px-2">
         <div className="py-4">
