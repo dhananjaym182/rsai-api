@@ -29,7 +29,7 @@ export function ParametersPanel() {
             <Label>Temperature: {params.temperature}</Label>
             <Slider
               value={[params.temperature]}
-              onValueChange={([value]) => updateParams({ temperature: value })}
+              onValueChange={(values: number[]) => updateParams({ temperature: values[0] })}
               min={0}
               max={2}
               step={0.1}
@@ -51,7 +51,7 @@ export function ParametersPanel() {
             <Label>Top P: {params.topP}</Label>
             <Slider
               value={[params.topP]}
-              onValueChange={([value]) => updateParams({ topP: value })}
+              onValueChange={(values: number[]) => updateParams({ topP: values[0] })}
               min={0}
               max={1}
               step={0.05}
