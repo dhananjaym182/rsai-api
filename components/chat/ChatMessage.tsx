@@ -18,17 +18,23 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user'
 
   return (
-    <div className={`flex gap-4 group ${isUser ? 'flex-row-reverse' : ''}`}>
-      <Avatar className="h-8 w-8 border border-border">
-        <AvatarFallback className={isUser ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}>
-          {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-        </AvatarFallback>
-      </Avatar>
+    <div className={`flex gap-3 group ${isUser ? 'justify-end' : 'justify-start'}`}>
+      {!isUser && (
+        <Avatar className="h-9 w-9 border-2 border-primary/20 flex-shrink-0 shadow-sm">
+          <AvatarFallback className="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground">
+            <Bot className="h-4 w-4" />
+          </AvatarFallback>
+        </Avatar>
+      )}
 
-      <div className={`flex-1 space-y-2 ${isUser ? 'flex flex-col items-end' : ''}`}>
-        <Card className={`max-w-[85%] px-4 py-3 ${isUser ? 'bg-primary text-primary-foreground' : 'bg-card border-border'}`}>
+      <div className={`flex flex-col space-y-2 max-w-[75%] md:max-w-[65%]`}>
+        <Card className={`px-4 py-3 shadow-sm ${
+          isUser 
+            ? 'bg-primary text-primary-foreground border-primary' 
+            : 'bg-card border-border hover:shadow-md transition-shadow'
+        }`}>
           {isUser ? (
-            <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
           ) : (
             <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
               <ReactMarkdown
@@ -40,8 +46,16 @@ export function ChatMessage({ message }: ChatMessageProps) {
             </div>
           )}
         </Card>
-        <MessageActions message={message} />
+        {!isUser && <MessageActions message={message} />}
       </div>
+
+      {isUser && (
+        <Avatar className="h-9 w-9 border-2 border-muted flex-shrink-0 shadow-sm">
+          <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 text-primary-foreground">
+            <User className="h-4 w-4" />
+          </AvatarFallback>
+        </Avatar>
+      )}
     </div>
   )
 }

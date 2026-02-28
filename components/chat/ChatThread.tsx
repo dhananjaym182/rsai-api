@@ -7,7 +7,7 @@ import { ChatComposer } from './ChatComposer'
 import { ChatMessage } from './ChatMessage'
 import { ModelSelector } from '@/components/model/ModelSelector'
 import { Button } from '@/components/ui/button'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, MessageSquare } from 'lucide-react'
 
 export function ChatThread() {
   const activeSession = useChatStore((state) => state.getActiveSession())
@@ -50,19 +50,35 @@ export function ChatThread() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="border-b px-4 py-3 bg-background">
-        <ModelSelector />
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {activeSession.messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))}
+      <div className="border-b px-6 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="max-w-4xl mx-auto">
+          <ModelSelector />
         </div>
       </div>
 
-      <div className="border-t px-4 py-4 bg-background">
+      <div className="flex-1 overflow-y-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {activeSession.messages.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-3 max-w-md">
+                <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <MessageSquare className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold">Start a conversation</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Type a message below to begin chatting with your AI assistant
+                </p>
+              </div>
+            </div>
+          ) : (
+            activeSession.messages.map((message) => (
+              <ChatMessage key={message.id} message={message} />
+            ))
+          )}
+        </div>
+      </div>
+
+      <div className="border-t px-6 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-4xl mx-auto">
           <ChatComposer />
         </div>

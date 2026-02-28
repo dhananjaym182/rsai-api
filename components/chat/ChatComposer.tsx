@@ -104,29 +104,41 @@ export function ChatComposer() {
 
   return (
     <div className="space-y-3">
-      <Textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-        className="min-h-[100px] resize-none bg-secondary border-border"
-        disabled={streaming}
-      />
+      <div className="relative group">
+        <Textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
+          className="min-h-[100px] resize-none bg-muted/50 border-2 border-border focus:border-primary focus:bg-background transition-all pr-14 shadow-sm"
+          disabled={streaming}
+        />
+        <div className="absolute bottom-3 right-3">
+          {streaming ? (
+            <Button 
+              onClick={handleStop} 
+              variant="destructive" 
+              size="icon" 
+              className="h-9 w-9 cursor-pointer shadow-md hover:shadow-lg transition-all"
+            >
+              <Square className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleSend} 
+              disabled={!input.trim()} 
+              size="icon" 
+              className="h-9 w-9 cursor-pointer shadow-md hover:shadow-lg transition-all bg-primary hover:bg-primary/90"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
       <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground font-mono">
+        <span className="text-xs text-muted-foreground font-mono bg-muted/50 px-2 py-1 rounded-md">
           {formatTokenCount(tokenCount)} tokens
         </span>
-        {streaming ? (
-          <Button onClick={handleStop} variant="destructive" size="sm">
-            <Square className="mr-2 h-4 w-4" />
-            Stop
-          </Button>
-        ) : (
-          <Button onClick={handleSend} disabled={!input.trim()} size="sm">
-            <Send className="mr-2 h-4 w-4" />
-            Send
-          </Button>
-        )}
       </div>
     </div>
   )

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@assistant-ui/react": "^0.5.90",
-    "@assistant-ui/react-markdown": "^0.2.15",
+    "@assistant-ui/react-markdown": "^0.2.27",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -36,7 +36,7 @@
     "react-markdown": "^9.0.1",
     "react-resizable-panels": "^4.6.5",
     "rehype-highlight": "^7.0.1",
-    "remark-gfm": "^4.0.0",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.6.0",
     "vaul": "^1.1.2",

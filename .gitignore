@@ -45,3 +45,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.agent
+.factory
+.droid
+.droid/
+.gemini/
+.gemini/skills/ui-ux-pro-max/data/colors.csv

@@ -55,14 +55,14 @@ export function ModelSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full justify-between">
-          <span>
+        <Button variant="outline" className="w-full justify-between cursor-pointer hover:bg-accent">
+          <span className="truncate">
             {currentModel ? `${currentModel.providerName} / ${currentModel.modelId}` : 'Select Model'}
           </span>
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-2 h-4 w-4 flex-shrink-0" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-96">
+      <DropdownMenuContent className="w-96 max-h-[400px] overflow-y-auto">
         <div className="p-2">
           <Input
             placeholder="Search models..."
@@ -78,12 +78,13 @@ export function ModelSelector() {
               <DropdownMenuItem
                 key={`${model!.providerId}-${model!.modelId}`}
                 onClick={() => setActiveModel(model!.providerId, model!.modelId)}
+                className="cursor-pointer"
               >
                 <div
-                  className="w-2 h-2 rounded-full mr-2"
+                  className="w-2 h-2 rounded-full mr-2 flex-shrink-0"
                   style={{ backgroundColor: model!.providerColor }}
                 />
-                {model!.providerName} / {model!.modelId}
+                <span className="truncate">{model!.providerName} / {model!.modelId}</span>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -109,8 +110,9 @@ export function ModelSelector() {
                 <DropdownMenuItem
                   key={`${model.providerId}-${model.modelId}`}
                   onClick={() => setActiveModel(model.providerId, model.modelId)}
+                  className="cursor-pointer"
                 >
-                  {model.modelId}
+                  <span className="truncate">{model.modelId}</span>
                 </DropdownMenuItem>
               ))}
             </div>

@@ -27,17 +27,14 @@ export function ProviderCard({ provider }: ProviderCardProps) {
   const resetProvider = useProvidersStore((state) => state.resetProvider)
 
   const [expanded, setExpanded] = useState(false)
-  const [apiKey, setApiKey] = useState(() => {
-    if (config?.apiKey) {
-      return decryptKey(config.apiKey)
-    }
-    return ''
-  })
+  const [apiKey, setApiKey] = useState('')
   const [baseUrl, setBaseUrl] = useState(() => config?.baseUrl || provider.baseUrl)
   const [fetchedModels, setFetchedModels] = useState<ModelInfo[]>([])
   const [selectedModels, setSelectedModels] = useState<string[]>(() => config?.enabledModels || [])
   const [manualModelInput, setManualModelInput] = useState('')
   const [manualModels, setManualModels] = useState<string[]>([])
+  
+  const isConfigured = !!config?.apiKey
 
   const handleAddManualModel = () => {
     if (!manualModelInput.trim()) {
@@ -68,15 +65,19 @@ export function ProviderCard({ provider }: ProviderCardProps) {
       return
     }
 
+    // If no new key entered, keep existing encrypted key
+    const finalApiKey = apiKey ? encryptKey(apiKey) : (config?.apiKey || '')
+
     const newConfig: ProviderConfig = {
       providerId: provider.id,
-      apiKey: encryptKey(apiKey),
+      apiKey: finalApiKey,
       baseUrl,
       enabledModels: selectedModels,
       isConnected: false,
       status: 'NOT_CONFIGURED',
     }
     saveProvider(newConfig)
+    setApiKey('') // Clear input after save
     toast.success(`${provider.name} configuration saved`)
   }
 
@@ -118,6 +119,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
               value={apiKey}
               onChange={setApiKey}
               placeholder={provider.keyPlaceholder}
+              isConfigured={isConfigured}
             />
           )}
 
@@ -129,7 +131,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
 
           <ModelFetcher
             baseUrl={baseUrl}
-            apiKey={apiKey}
+            apiKey={apiKey || (config?.apiKey ? decryptKey(config.apiKey) : '')}
             requiresKey={provider.requiresKey}
             onModelsFetched={(models) => {
               setFetchedModels(models)
@@ -188,7 +190,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
             <ProviderTestPanel
               config={{
                 providerId: provider.id,
-                apiKey: encryptKey(apiKey),
+                apiKey: apiKey ? encryptKey(apiKey) : (config?.apiKey || ''),
                 baseUrl,
                 enabledModels: selectedModels,
                 isConnected: false,

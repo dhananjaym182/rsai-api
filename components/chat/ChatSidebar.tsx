@@ -35,7 +35,7 @@ export function ChatSidebar() {
   const renderGroup = (title: string, sessions: typeof sessionsList) => {
     if (sessions.length === 0) return null
     return (
-      <div className="mb-4">
+      <div className="mb-6">
         <h3 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           {title}
         </h3>
@@ -43,8 +43,8 @@ export function ChatSidebar() {
           {sessions.map((session) => (
             <div
               key={session.id}
-              className={`group flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all hover:bg-accent cursor-pointer ${
-                session.id === activeSessionId ? 'bg-accent' : ''
+              className={`group flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all hover:bg-accent cursor-pointer ${
+                session.id === activeSessionId ? 'bg-accent shadow-sm' : ''
               }`}
               onClick={() => setActiveSession(session.id)}
             >
@@ -53,13 +53,13 @@ export function ChatSidebar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
                   deleteSession(session.id)
                 }}
               >
-                <Trash2 className="h-3 w-3" />
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </div>
           ))}
@@ -69,32 +69,40 @@ export function ChatSidebar() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-background border-r border-border">
-      <div className="p-4 space-y-3">
-        <Button onClick={() => createSession()} className="w-full">
+    <div className="flex flex-col h-full bg-card border-r border-border">
+      <div className="p-4 space-y-3 border-b border-border">
+        <Button onClick={() => createSession()} className="w-full cursor-pointer shadow-sm hover:shadow-md transition-all">
           <Plus className="mr-2 h-4 w-4" />
           New Chat
         </Button>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search chats..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-secondary border-border"
+            className="pl-9 bg-muted/50 border-border focus:bg-background focus:border-primary transition-all"
           />
         </div>
       </div>
 
-      <Separator className="bg-border" />
-
       <ScrollArea className="flex-1 px-2">
         <div className="py-4">
-          {renderGroup('Today', today)}
-          {renderGroup('Yesterday', yesterday)}
-          {renderGroup('Last 7 Days', lastWeek)}
-          {renderGroup('Older', older)}
+          {filteredSessions.length === 0 ? (
+            <div className="text-center py-8 px-4">
+              <p className="text-sm text-muted-foreground">
+                {search ? 'No chats found' : 'No chats yet'}
+              </p>
+            </div>
+          ) : (
+            <>
+              {renderGroup('Today', today)}
+              {renderGroup('Yesterday', yesterday)}
+              {renderGroup('Last 7 Days', lastWeek)}
+              {renderGroup('Older', older)}
+            </>
+          )}
         </div>
       </ScrollArea>
     </div>

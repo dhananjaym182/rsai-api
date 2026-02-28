@@ -25,30 +25,34 @@ export function SettingsLayout({ children }: SettingsLayoutProps) {
     <div className="flex flex-col h-screen">
       <AppHeader />
       <div className="flex-1 overflow-hidden">
-        <div className="container h-full py-6">
-          <div className="flex flex-col gap-6 h-full">
+        <div className="container h-full py-8">
+          <div className="flex flex-col gap-8 h-full">
             <div className="flex items-center gap-4">
               <Link href="/chat">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="cursor-pointer hover:bg-accent transition-all">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Chat
                 </Button>
               </Link>
               <Separator orientation="vertical" className="h-6" />
-              <h1 className="text-2xl font-bold">Settings</h1>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                Settings
+              </h1>
             </div>
 
-            <div className="grid grid-cols-[200px_1fr] gap-6 flex-1 overflow-hidden">
-              <nav className="space-y-1">
+            <div className="grid grid-cols-[240px_1fr] gap-8 flex-1 overflow-hidden">
+              <nav className="space-y-2">
                 {navItems.map((item) => {
                   const Icon = item.icon
                   return (
                     <Link key={item.href} href={item.href}>
                       <Button
                         variant={pathname === item.href ? 'secondary' : 'ghost'}
-                        className="w-full justify-start"
+                        className={`w-full justify-start cursor-pointer transition-all ${
+                          pathname === item.href ? 'shadow-sm' : ''
+                        }`}
                       >
-                        <Icon className="mr-2 h-4 w-4" />
+                        <Icon className="mr-3 h-4 w-4" />
                         {item.label}
                       </Button>
                     </Link>
@@ -56,7 +60,7 @@ export function SettingsLayout({ children }: SettingsLayoutProps) {
                 })}
               </nav>
 
-              <div className="overflow-auto">{children}</div>
+              <div className="overflow-auto pr-2">{children}</div>
             </div>
           </div>
         </div>
