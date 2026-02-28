@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Provider, ProviderConfig, ModelInfo } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -22,29 +22,22 @@ interface ProviderCardProps {
 }
 
 export function ProviderCard({ provider }: ProviderCardProps) {
-  const [expanded, setExpanded] = useState(false)
-  const [apiKey, setApiKey] = useState('')
-  const [baseUrl, setBaseUrl] = useState(provider.baseUrl)
-  const [fetchedModels, setFetchedModels] = useState<ModelInfo[]>([])
-  const [selectedModels, setSelectedModels] = useState<string[]>([])
-  const [manualModelInput, setManualModelInput] = useState('')
-  const [manualModels, setManualModels] = useState<string[]>([])
-
   const config = useProvidersStore((state) => state.getProvider(provider.id))
   const saveProvider = useProvidersStore((state) => state.saveProvider)
   const resetProvider = useProvidersStore((state) => state.resetProvider)
 
-  // Load existing config when component mounts or config changes
-  useEffect(() => {
-    if (config) {
-      setBaseUrl(config.baseUrl)
-      setSelectedModels(config.enabledModels)
-      if (config.apiKey) {
-        const decrypted = decryptKey(config.apiKey)
-        setApiKey(decrypted)
-      }
+  const [expanded, setExpanded] = useState(false)
+  const [apiKey, setApiKey] = useState(() => {
+    if (config?.apiKey) {
+      return decryptKey(config.apiKey)
     }
-  }, [config])
+    return ''
+  })
+  const [baseUrl, setBaseUrl] = useState(() => config?.baseUrl || provider.baseUrl)
+  const [fetchedModels, setFetchedModels] = useState<ModelInfo[]>([])
+  const [selectedModels, setSelectedModels] = useState<string[]>(() => config?.enabledModels || [])
+  const [manualModelInput, setManualModelInput] = useState('')
+  const [manualModels, setManualModels] = useState<string[]>([])
 
   const handleAddManualModel = () => {
     if (!manualModelInput.trim()) {

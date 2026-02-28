@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MessageSquare, Settings, Sparkles } from 'lucide-react'
 import { ModeToggle } from '@/components/mode-toggle'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 
 export function AppHeader() {
   const pathname = usePathname()
