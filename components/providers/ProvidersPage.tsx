@@ -47,13 +47,13 @@ export function ProvidersPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight">AI Providers</h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Configure your API keys and connect to AI providers
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="gap-2">
-            <CheckCircle2 className="h-3 w-3" />
+          <Badge variant="outline" className="gap-2 bg-secondary">
+            <CheckCircle2 className="h-3 w-3 text-green-500" />
             {connectedCount}/{providers.length} Connected
           </Badge>
           <Button onClick={handleAutoDetect} disabled={detecting} variant="outline">
@@ -69,7 +69,7 @@ export function ProvidersPage() {
           placeholder="Search providers..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
+          className="pl-9 bg-secondary border-border"
         />
       </div>
 

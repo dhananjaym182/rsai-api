@@ -91,9 +91,9 @@ export function ProviderCard({ provider }: ProviderCardProps) {
   }
 
   return (
-    <Card>
+    <Card className="border-border">
       <CardHeader
-        className="cursor-pointer"
+        className="cursor-pointer hover:bg-accent/50 transition-colors rounded-t-xl"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center justify-between">
@@ -102,17 +102,17 @@ export function ProviderCard({ provider }: ProviderCardProps) {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: provider.color }}
             />
-            <CardTitle>{provider.name}</CardTitle>
+            <CardTitle className="text-lg">{provider.name}</CardTitle>
           </div>
           <div className="flex items-center gap-2">
             <ProviderStatusBadge status={config?.status || 'NOT_CONFIGURED'} />
-            {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            {expanded ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
           </div>
         </div>
       </CardHeader>
 
       {expanded && (
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           {provider.requiresKey && (
             <ApiKeyInput
               value={apiKey}
@@ -146,9 +146,8 @@ export function ProviderCard({ provider }: ProviderCardProps) {
             />
           )}
 
-          {/* Manual Model Input */}
-          <div className="space-y-2 border-t pt-4">
-            <Label>Add Model Manually</Label>
+          <div className="space-y-2 border-t border-border pt-4">
+            <Label className="text-sm font-medium">Add Model Manually</Label>
             <div className="flex gap-2">
               <Input
                 placeholder="e.g., gpt-4, claude-3-opus-20240229"
@@ -160,20 +159,21 @@ export function ProviderCard({ provider }: ProviderCardProps) {
                     handleAddManualModel()
                   }
                 }}
+                className="bg-secondary border-border"
               />
-              <Button onClick={handleAddManualModel} size="sm">
+              <Button onClick={handleAddManualModel} size="sm" variant="secondary">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             {manualModels.length > 0 && (
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <p className="text-xs text-muted-foreground">Manually added models:</p>
                 {manualModels.map((modelId) => (
-                  <div key={modelId} className="flex items-center justify-between bg-muted p-2 rounded">
-                    <span className="text-sm">{modelId}</span>
+                  <div key={modelId} className="flex items-center justify-between bg-secondary border border-border px-3 py-2 rounded-md">
+                    <span className="text-sm font-mono">{modelId}</span>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon-xs"
                       onClick={() => handleRemoveManualModel(modelId)}
                     >
                       <X className="h-3 w-3" />
@@ -197,8 +197,8 @@ export function ProviderCard({ provider }: ProviderCardProps) {
             />
           )}
 
-          <div className="flex gap-2">
-            <Button onClick={handleSave} disabled={selectedModels.length === 0}>
+          <div className="flex gap-2 pt-2">
+            <Button onClick={handleSave} disabled={selectedModels.length === 0} className="flex-1">
               Save Configuration
             </Button>
             <Button variant="outline" onClick={handleReset}>
@@ -207,7 +207,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
           </div>
 
           {config && (
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground bg-secondary/50 px-3 py-2 rounded-md border border-border">
               {config.enabledModels.length} model(s) configured
             </div>
           )}

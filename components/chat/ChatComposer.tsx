@@ -103,17 +103,17 @@ export function ChatComposer() {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <Textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-        className="min-h-[100px] resize-none"
+        className="min-h-[100px] resize-none bg-secondary border-border"
         disabled={streaming}
       />
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
+        <span className="text-xs text-muted-foreground font-mono">
           {formatTokenCount(tokenCount)} tokens
         </span>
         {streaming ? (
